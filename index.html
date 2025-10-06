@@ -91,6 +91,26 @@ const AGE = new Date().getFullYear() - BIRTH_YEAR;
 /* ================== Knowledge Base ================== */
 const KB = [
   // Product Management (top priority)
+    { key:"intro",
+    q:["varun's introduction","introduction","intro overview","about varun intro","tell me about varun"],
+    a:"I have an MBA in Business Analytics and a little over four years in product management. I built a 0→1 travel platform at Muddie Trails, improved transit reliability at MTA, worked on credit card fraud/disputes at Infosys, and managed parts of the Sydney Health app at Elevance Health. My style is simple: stay curious, simplify complexity, and focus on real user problems."
+  },
+
+  { key:"roles_target",
+    q:["what roles is varun targeting?","roles targeting","target roles","role focus","varun targeting roles"],
+    a:"Product Manager / Product Owner roles (4+ years experience)."
+  },
+
+  { key:"top_projects",
+    q:["varun's top projects","top projects","best projects","key projects","projects highlights"],
+    a:"Top projects:\n• Elevance Health — Sydney Health app\n• MTA New York City Transit — transit ops analytics\n• Infosys (Capital One) — credit card fraud/disputes\n• Muddie Trails — booking & payments platform (0→1)"
+  },
+
+  { key:"next_role_expect",
+    q:["what is varun expecting in next roles?","what are you looking for in your next role","next role expectations","what do you want in your next role","role expectations"],
+    a:"I’m looking for a role where I can own a product end-to-end and work on initiatives that directly improve customer problems. I thrive in collaborative environments where product, design, and engineers work together, and where decisions are guided by both data and customer feedback. I’m also looking for strong leadership that encourages ownership and continuous learning so I can grow as a PM and help products succeed."
+  },
+
   { key:"pm_def",
     q:[
       "what is product management","define product management","pm definition",
@@ -218,6 +238,12 @@ function route(raw){
   // 1) PM definition
   if (includesAny(q, ["product management","pm definition","what is pm","define pm"])) return get("pm_def");
 
+    // Chips / quick questions
+  if (includesAny(q, ["varun's introduction","introduction","intro overview"])) return get("intro");
+  if (includesAny(q, ["what roles is varun targeting","roles targeting","target roles","role focus"])) return get("roles_target");
+  if (includesAny(q, ["varun's top projects","top projects","projects highlights"])) return get("top_projects");
+  if (includesAny(q, ["what is varun expecting in next roles","what are you looking for in your next role","next role expectations"])) return get("next_role_expect");
+
   // 2) Strengths & Weaknesses (any variant, incl typos)
   if (includesAny(q, ["strength","weakness","weekness"])) return get("strengths_weaknesses");
 
@@ -275,6 +301,22 @@ const qEl = document.getElementById("q");
 const sendBtn = document.getElementById("send");
 const chips = document.getElementById("chips");
 
+// Quick chips under the search bar
+const SUGGESTIONS = [
+  "Varun's Introduction",
+  "What roles is Varun targeting?",
+  "Varun's top projects",
+  "What is Varun expecting in next roles?"
+];
+
+SUGGESTIONS.forEach(t => {
+  const b = document.createElement("button");
+  b.className = "chip";
+  b.textContent = t;
+  b.onclick = () => sendQuery(t);
+  chips.appendChild(b);
+});
+  
 function ensureChatVisible(){
   if(chatwrap.style.display !== "block"){
     chatwrap.style.display = "block";
