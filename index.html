@@ -84,53 +84,191 @@ h1 .l1, h1 .l2{display:block}
   </div>
 
 <script>
-/* ====== Personal facts used in answers ====== */
+/* ================== Core facts ================== */
 const BIRTH_YEAR = 1996;
 const AGE = new Date().getFullYear() - BIRTH_YEAR;
 
-/* ====== Knowledge Base (exact answers) ====== */
+/* ================== Knowledge Base ================== */
 const KB = [
-  { q:["intro","summarize varun's intro","tell me about yourself","introduce yourself","background","who are you","about varun","career snapshot","quick summary"],
-    a:"I have an MBA in Business Analytics and a little over four years in product management. I built a 0→1 travel platform at Muddie Trails, improved transit reliability at MTA, worked on credit card fraud/disputes at Infosys, and managed parts of the Sydney Health app at Elevance Health. My style is simple: stay curious, simplify complexity, and focus on real user problems." },
+  // Product Management (top priority)
+  { key:"pm_def",
+    q:[
+      "what is product management","define product management","pm definition",
+      "product management meaning","explain product management","what is pm","define pm"
+    ],
+    a:"Product Management is the end-to-end practice of identifying customer problems, shaping a clear vision and strategy, and partnering with design/engineering/analytics to ship solutions. It blends discovery, prioritization, delivery, and measurement — connecting user needs with business outcomes."
+  },
 
-  /* Personal basics */
-  { q:["where was varun born","birthplace","place of birth","born where","where is varun born","born"],
-    a:"Bengaluru (Bangalore), Karnataka, India." },
-  { q:["how old is varun","age","what is varun's age","year of birth","birth year","when was varun born"],
-    a:`Born in ${BIRTH_YEAR} (about ${AGE} years old).` },
-  { q:["where is varun based","location","current city","where are you located","where is varun currently living","city"],
-    a:"New York City, NY — open to relocating anywhere in the USA." },
+  // Strengths & Weaknesses (single source of truth)
+  { key:"strengths_weaknesses",
+    q:[
+      "strengths and weaknesses","strengths & weaknesses","strengths weaknesses",
+      "strengths","strength","weaknesses","weakness",
+      "weekness","weeknesses","what are his strength and weakness","what are varun's strengths and weaknesses"
+    ],
+    a:`Strengths and Weaknesses
+As a Product Manager, one of my biggest strengths is my ability to drive data-backed product decisions while optimizing processes to improve efficiency and customer experience. If you ask my previous stakeholders, they would say Varun is someone who takes complete ownership, collaborates cross-functionally, and continuously seeks ways to enhance product usability, automation, and operational impact. I prioritize customer needs by analyzing data, gathering insights, and aligning teams to deliver meaningful improvements.
 
-  /* Strengths & Weaknesses */
-  { q:["strengths and weaknesses","weaknesses","weakness","weekness","weeknesses","what are his strength and weakness","strength and weakness"],
-    a:"Strengths and Weaknesses\nAs a Product Manager, one of my biggest strengths is my ability to drive data-backed product decisions while optimizing processes to improve efficiency and customer experience. If you ask my previous stakeholders, they would say Varun is someone who takes complete ownership, collaborates cross-functionally, and continuously seeks ways to enhance product usability, automation, and operational impact. I prioritize customer needs by analyzing data, gathering insights, and aligning teams to deliver meaningful improvements.\n\nWeaknesses\nOne area I’ve been working on is balancing my attention to detail. I naturally focus on accuracy, but at times, it can slow me down when working under tight deadlines. Another thing is that I find it hard to say NO to people, which sometimes leads to taking on more than I can handle. I’m actively working on this and learning to say NO." },
+Weaknesses
+One area I’ve been working on is balancing my attention to detail. I naturally focus on accuracy, but at times, it can slow me down when working under tight deadlines. Another thing is that I find it hard to say NO to people, which sometimes leads to taking on more than I can handle. I’m actively working on this and learning to say NO.`
+  },
 
-  /* What is Product Management */
-  { q:["what is product management","define product management","pm definition","product management meaning"],
-    a:"Product Management is the practice of identifying customer problems, shaping a vision, and working with cross-functional teams to deliver solutions. It blends strategy, design, data, and execution—connecting user needs with business goals to build products that truly solve problems." },
+  // Favorite food / eating
+  { key:"favorite_food",
+    q:[
+      "favorite food","favourite food","fav food","what does varun like to eat",
+      "what does he like to eat","what food does varun like","cuisine preference","cuisines he likes"
+    ],
+    a:"Varun enjoys exploring different cuisines — weekend coffee hunts, trying new spots, and simple home recipes. No single favorite dish; he likes variety and good coffee."
+  },
 
-  /* Education */
-  { q:["where did varun graduate","where did he graduate","where did you graduate","which university did you graduate from","graduate from","graduated from","alma mater","which college","which school","your university","mba school","mba university","where did varun do mba","masters school","graduate school","pace university","mba college","where study masters"],
-    a:"Pace University, New York City — MBA in Business Analytics (January 2022 – December 2023)." },
-  { q:["mba graduation year","when did varun graduate mba","which year did he graduate mba","masters graduation date","when did you graduate mba","graduation month mba"],
-    a:"MBA graduation: December 2023." },
-  { q:["bachelors","bachelor's","undergrad","undergraduate","ug","under graduation","bba","where did varun do his bachelor's","undergrad college","undergrad university","surana university","bba college","bba school"],
-    a:"Surana University — Bachelor of Business Administration (BBA), 2016–2019 (graduated August 2019)." },
-  { q:["bachelor graduation year","when did varun graduate bachelors","undergrad graduation date","bba graduation year"],
-    a:"Bachelor’s graduation: August 2019." },
+  // Birthplace (with pronouns)
+  { key:"birthplace",
+    q:[
+      "where was varun born","birthplace","place of birth","born where",
+      "where is varun born","where was he born","his birthplace","native place","where was he from originally"
+    ],
+    a:"Bengaluru (Bangalore), Karnataka, India."
+  },
 
-  /* Experience highlights */
-  { q:["elevance","sydney health","healthcare app","telehealth"],
-    a:"At Elevance Health I managed parts of the Sydney Health app (16M+ members): billing-related experiences such as claims, prescriptions, and insurance. I owned the roadmap, used SQL/Tableau to analyze member journeys, and shipped improvements in two-week sprints with engineering, design, UX, and operations." },
-  { q:["mta","transit","bus operations","wait time","gps","cameras","payment machines"],
-    a:"At MTA I worked on reducing passenger wait times during peak hours. I used SQL/Tableau to flag not-service-ready buses and coordinated with engineering/ops/planners to fix and re-route. This cut peak wait times by about 15 minutes." },
-  { q:["infosys","capital one","credit cards","disputes","fraud","backlog"],
-    a:"At Infosys (supporting Capital One) I analyzed dispute workflows in SQL/Tableau, identified bottlenecks, and partnered with ops/fraud/engineering/PMs to redesign flows and prioritize fixes—reducing backlog and improving customer NPS." },
-  { q:["muddie trails","travel startup","0-1","booking platform","payments platform","referrals","personas"],
-    a:"At Muddie Trails (first PM) I built a 0→1 booking and payments platform: defined personas, onboarded vendors, designed booking flows, launched referrals, and set up dashboards. I onboarded the first ~200 customers, helping scale from dozens to tens of thousands of users." },
+  // Age (with pronouns)
+  { key:"age",
+    q:[
+      "how old is varun","how old is he","age","his age","birth year","year of birth","when was varun born","how many years old"
+    ],
+    a:`Born in ${BIRTH_YEAR} (about ${AGE} years old).`
+  },
+
+  // Current city (with pronouns)
+  { key:"current_city",
+    q:[
+      "where is varun based","current city","where are you located","where is varun currently living",
+      "where does he live","where is he based","living now","based now","current location"
+    ],
+    a:"New York City, NY — open to relocating anywhere in the USA."
+  },
+
+  // Education — MBA school and year
+  { key:"mba_school",
+    q:[
+      "where did varun graduate","where did he graduate","where did you graduate",
+      "which university did you graduate from","graduate from","graduated from","alma mater",
+      "which college","which school","your university","mba school","mba university",
+      "where did varun do mba","masters school","graduate school","pace university","mba college","where study masters"
+    ],
+    a:"Pace University, New York City — MBA in Business Analytics (January 2022 – December 2023)."
+  },
+  { key:"mba_year",
+    q:[
+      "mba graduation year","when did varun graduate mba","which year did he graduate mba",
+      "masters graduation date","when did you graduate mba","graduation month mba"
+    ],
+    a:"MBA graduation: December 2023."
+  },
+
+  // Education — Bachelors school and year
+  { key:"bachelors_school",
+    q:[
+      "bachelors","bachelor's","undergrad","undergraduate","ug","under graduation","bba",
+      "where did varun do his bachelor's","undergrad college","undergrad university","surana university","bba college","bba school"
+    ],
+    a:"Surana University — Bachelor of Business Administration (BBA), 2016–2019 (graduated August 2019)."
+  },
+  { key:"bachelors_year",
+    q:[
+      "bachelor graduation year","when did varun graduate bachelors","undergrad graduation date","bba graduation year"
+    ],
+    a:"Bachelor’s graduation: August 2019."
+  },
+
+  // Work logistics
+  { key:"title_start", q:["current title","job title","role title","what is varun's title","what do you do","availability","available to start","start date","notice period","when can you start","join immediately","start immediately"], a:"Title: Product Manager. Availability: I can start immediately." },
+  { key:"comp", q:["compensation","salary expectations","expected salary","pay range","comp range","ctc","what salary are you looking for"], a:"Compensation: open to negotiation." },
+  { key:"work_mode", q:["work arrangement","remote","hybrid","in person","onsite","work location","time zone","timezone","working hours","office policy"], a:"I’m comfortable with remote, hybrid, or in-person setups, and I can work across any U.S. time zone." },
+  { key:"industry_pref", q:["industry preference","preferred industry","industry focus","domain preference","what industries","any industry","preference anything is okay"], a:"Industry-agnostic and customer-first: if the product truly solves user problems, the industry comes second." },
+  { key:"stage_pref", q:["company stage","stage preference","startup vs enterprise","early stage vs growth","series a","seed","mature company","any company stage"], a:"I’m comfortable at any company stage—from 0→1 to growth and mature." },
+  { key:"team_size", q:["team size","team preference","small team or big team","what team size","org size","any team size"], a:"Any team size works—I adapt to small, fast squads and larger cross-functional groups." },
+  { key:"relocation", q:["relocation","willing to relocate","can you relocate","relocate anywhere"], a:"Yes—open to relocating anywhere in the USA." },
+  { key:"work_auth", q:["work authorization","work auth","visa","sponsorship","authorized to work","work permit"], a:"Authorized to work in the USA for any employer." },
+
+  // Experience highlights
+  { key:"elevance", q:["elevance","elevance health","sydney health","healthcare app","telehealth","elevance highlights","sydney"], a:"At Elevance Health I managed parts of the Sydney Health app (16M+ members): billing-related experiences such as claims, prescriptions, and insurance. I owned the roadmap, used SQL/Tableau to analyze member journeys, and shipped improvements in two-week sprints with engineering, design, UX, and operations." },
+  { key:"mta", q:["mta","transit","bus operations","wait time","gps","cameras","payment machines","transit analytics"], a:"At MTA I worked on reducing passenger wait times during peak hours. I used SQL/Tableau to flag not-service-ready buses (payment, GPS, camera issues) and coordinated with engineering/ops/planners to fix and re-route. This cut peak wait times by about 15 minutes." },
+  { key:"infosys", q:["infosys","capital one","credit cards","disputes","chargebacks","refunds","fraud","backlog"], a:"At Infosys (supporting Capital One) I analyzed dispute workflows in SQL/Tableau, identified bottlenecks, and partnered with ops/fraud/engineering/PMs to redesign flows and prioritize fixes—reducing backlog and improving customer NPS." },
+  { key:"muddie", q:["muddie trails","0-1","booking platform","payments platform","travel startup","referrals","personas"], a:"At Muddie Trails (first PM) I built a 0→1 booking and payments platform: defined personas, onboarded vendors, designed booking flows, launched referrals, and set up dashboards. I onboarded the first ~200 customers, helping scale from dozens to tens of thousands of users." },
+
+  // Contact & links
+  { key:"portfolio", q:["portfolio link","website","portfolio url","portfolio"], a:"Portfolio: https://varunthinksproduct.framer.website/" },
+  { key:"email", q:["email","contact varun","how to contact varun","reach out"], a:"Email: varunsrikanth23@gmail.com" },
+  { key:"resume", q:["resume","cv","download resume"], a:"Use the Resume button at the top to open the PDF." }
 ];
 
-/* ====== Chat UI helpers ====== */
+/* ================== Router (priority first) ================== */
+const norm = s => String(s||"").toLowerCase();
+
+function includesAny(s, arr){ s = norm(s); return arr.some(k => s.includes(norm(k))); }
+
+// Return the first KB entry whose key matches
+const get = key => (KB.find(i => i.key === key) || {}).a || "";
+
+/* Priority intents */
+function route(raw){
+  const q = norm(raw);
+
+  // 1) PM definition
+  if (includesAny(q, ["product management","pm definition","what is pm","define pm"])) return get("pm_def");
+
+  // 2) Strengths & Weaknesses (any variant, incl typos)
+  if (includesAny(q, ["strength","weakness","weekness"])) return get("strengths_weaknesses");
+
+  // 3) Favorite food
+  if (includesAny(q, ["favorite food","favourite food","fav food","like to eat","cuisine"])) return get("favorite_food");
+
+  // 4) Birthplace / born
+  if (includesAny(q, ["born","birthplace","place of birth","native"])) return get("birthplace");
+
+  // 5) Age
+  if (includesAny(q, ["how old","age","birth year","year of birth","years old"])) return get("age");
+
+  // 6) Current city / based
+  if (includesAny(q, ["where is varun based","current city","where are you located","currently living","where does he live","where is he based","living now","based now","current location"])) return get("current_city");
+
+  // 7) Education routing (where vs year; mba vs bachelors)
+  if (includesAny(q, ["where","graduate","graduated from","alma","university","college","school"])){
+    if (includesAny(q, ["bachelor","bachelors","undergrad","ug","bba"])) return get("bachelors_school");
+    return get("mba_school");
+  }
+  if (includesAny(q, ["which year","what year","when did","graduation year","graduation month"])){
+    if (includesAny(q, ["bachelor","bachelors","undergrad","ug","bba"])) return get("bachelors_year");
+    return get("mba_year");
+  }
+
+  // 8) Logistics specific
+  if (includesAny(q, ["available to start","start date","join immediately","availability"])) return get("title_start");
+  if (includesAny(q, ["compensation","salary","pay range","ctc"])) return get("comp");
+  if (includesAny(q, ["remote","hybrid","in person","onsite","time zone","office policy","work arrangement"])) return get("work_mode");
+  if (includesAny(q, ["industry preference","preferred industry","industry focus","domain preference"])) return get("industry_pref");
+  if (includesAny(q, ["company stage","stage preference","startup","growth","mature"])) return get("stage_pref");
+  if (includesAny(q, ["team size","org size","small team","big team"])) return get("team_size");
+  if (includesAny(q, ["relocation","relocate"])) return get("relocation");
+  if (includesAny(q, ["work authorization","work auth","visa","sponsorship","work permit"])) return get("work_auth");
+
+  // 9) Experience highlights
+  if (includesAny(q, ["elevance","sydney health"])) return get("elevance");
+  if (includesAny(q, ["mta","transit"])) return get("mta");
+  if (includesAny(q, ["infosys","capital one","disputes"])) return get("infosys");
+  if (includesAny(q, ["muddie"])) return get("muddie");
+
+  // 10) Links
+  if (includesAny(q, ["portfolio"])) return get("portfolio");
+  if (includesAny(q, ["email","contact"])) return get("email");
+  if (includesAny(q, ["resume","cv"])) return get("resume");
+
+  // Safe fallback (no intro spam)
+  return "I didn’t find that in Varun’s profile. Try asking about age, birthplace, current city, education, strengths & weaknesses, product management, projects, or contact.";
+}
+
+/* ================== Wire up existing UI ================== */
 const chat = document.getElementById("chat");
 const chatwrap = document.getElementById("chatwrap");
 const qEl = document.getElementById("q");
@@ -166,39 +304,28 @@ function typeText(el, text, speed=12){
     tick();
   });
 }
-const norm=s=>String(s||"").toLowerCase();
-const score=(query,keys)=> (keys||[]).reduce((s,k)=> norm(query).includes(norm(k)) ? s+1:s,0);
-
-function pickAnswer(query){
-  let best={a:KB[0].a,s:0};
-  for(const item of KB){
-    const s=score(query,item.q);
-    if(s>best.s) best={a:item.a,s};
-  }
-  return best.a;
-}
 
 function sendQuery(text){
   const t=(text||qEl.value||"").trim();
   if(!t) return;
   qEl.value="";
-  row("me",t);
+  row("me", t);
 
   const tn=typingNode();
-  row("bot",tn);
+  row("bot", tn);
 
-  const reply=pickAnswer(t);
+  const reply = route(t);
   setTimeout(async()=>{
-    const lastRow=tn.parentElement.parentElement;
+    const lastRow = tn.parentElement.parentElement;
     lastRow.remove();
-    const holder=document.createElement("span");
-    row("bot",holder);
-    await typeText(holder,reply,11);
-  },350);
+    const holder = document.createElement("span");
+    row("bot", holder);
+    await typeText(holder, reply, 11);
+  }, 300);
 }
 
-sendBtn.onclick=()=>sendQuery();
-qEl.addEventListener("keydown",e=>{ if(e.key==="Enter") sendQuery(); });
+sendBtn.onclick = ()=>sendQuery();
+qEl.addEventListener("keydown", e=>{ if(e.key==="Enter") sendQuery(); });
 </script>
 </body>
 </html>
