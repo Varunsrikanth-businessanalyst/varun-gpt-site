@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Varun-GPT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E0F12; --ink:#ECEDEE; --muted:#9AA0A6;
+  --panel:#16181D; --panel2:#202124; --stroke:#2A2B32;
+  --pill:#2A2B32; --pillStroke:#3A3B44; --accent:#7F8FFF;
+  --red:#ff5a5f; --shadow:0 10px 28px rgba(0,0,0,.40);
+}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto;overflow-x:hidden}
+
+.wrap{max-width:980px;margin:0 auto;padding:56px 20px 36px}
+.hero{min-height:74vh;display:flex;flex-direction:column;justify-content:center;align-items:center}
+
+h1{font-size:clamp(34px,4.6vw,58px);font-weight:800;margin:0 0 14px;text-align:center;line-height:1.06;letter-spacing:-.01em}
+h1 .l1, h1 .l2{display:block}
+.sub{text-align:center;color:var(--muted);margin:0 0 20px;font-size:clamp(14px,1.45vw,18px);line-height:1.35}
+.sub .s1,.sub .s2{display:block}
+.pm{color:#ff5a5f;font-weight:800}
+
+.actions{display:flex;gap:12px;justify-content:center;margin:10px 0 14px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 14px;border-radius:999px;border:1px solid var(--stroke);background:var(--panel);color:var(--ink);text-decoration:none;font-weight:700;font-size:13px;transition:transform .15s ease,border-color .15s ease}
+.btn:hover{border-color:#3a3b44;transform:translateY(-1px)}
+
+.label{color:var(--muted);text-align:center;font-weight:700;margin:6px 0 8px;font-size:13px;letter-spacing:.2px}
+.search{display:flex;gap:10px;align-items:center;margin:8px auto 10px;max-width:940px;width:100%}
+.bar{flex:1;background:var(--pill);border:1px solid var(--pillStroke);border-radius:26px;padding:16px 18px;font-size:16px;color:var(--ink);outline:none;box-shadow:var(--shadow)}
+.send{width:46px;height:46px;border-radius:999px;border:1px solid var(--pillStroke);background:var(--pill);cursor:pointer;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);transition:transform .15s ease, background .2s ease}
+.send:hover{background:#3A3B44} .send:active{transform:scale(.96) rotate(12deg)}
+
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:10px auto 0;max-width:940px}
+.chip{background:var(--pill);border:1px solid var(--pillStroke);color:var(--ink);padding:10px 14px;border-radius:999px;font-weight:700;font-size:13px;cursor:pointer;transition:transform .12s ease, border-color .15s ease}
+.chip:hover{transform:translateY(-1px);border-color:#3a3b44}
+.chip:active{transform:scale(.98)}
+
+.chatwrap{display:none;margin:18px auto 28px;max-width:940px}
+.card{background:var(--panel);border:1px solid var(--stroke);border-radius:16px;padding:8px}
+.chat{max-height:60vh;overflow:auto;background:var(--panel2);border-radius:12px;border:1px solid var(--stroke);padding:8px}
+.row{display:flex;margin:8px 0}
+.bubble{max-width:72%;padding:10px 14px;border-radius:14px;white-space:pre-wrap;line-height:1.45;font-size:14px;position:relative}
+.me .bubble{margin-left:auto;background:#2F3A4A;color:#fff;border-bottom-right-radius:6px}
+.bot .bubble{background:#16181D;border:1px solid var(--stroke)}
+
+.chat-on .hero{min-height:0;justify-content:flex-start}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1><span class="l1">Welcome to Varun-</span><span class="l2">GPT</span></h1>
+      <p class="sub">
+        <span class="s1">Ask anything about Varun's <span class="pm">Product Management</span>,</span>
+        <span class="s2">life, interests and goals.</span>
+      </p>
+
+      <div class="actions">
+        <a class="btn" href="resume.pdf" target="_blank">Resume</a>
+        <a class="btn" href="https://varunthinksproduct.framer.website/" target="_blank">Portfolio</a>
+        <a class="btn" href="https://www.linkedin.com/in/varun-srikanth/" target="_blank">LinkedIn</a>
+      </div>
+
+      <div class="label">Ask Varun-GPT</div>
+
+      <div class="search">
+        <input id="q" class="bar" placeholder="Want to know more about Varun? Ask away…">
+        <button class="send" id="send" title="Ask">➤</button>
+      </div>
+
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <div class="chatwrap" id="chatwrap">
+      <section class="card">
+        <div class="chat" id="chat"></div>
+      </section>
+    </div>
+  </div>
+
+<script>
+const KB = [{"q": ["intro", "summarize varun's intro", "tell me about yourself", "introduce yourself", "background", "who are you", "about varun", "career snapshot", "quick summary"], "a": "I have an MBA in Business Analytics and a little over four years in product management. I built a 0→1 travel platform at Muddie Trails, improved transit reliability at MTA, worked on credit card fraud/disputes at Infosys, and managed parts of the Sydney Health app at Elevance Health. My style is simple: stay curious, simplify complexity, and focus on real user problems."}, {"q": ["what is varun looking for in your next role", "what are you looking for in your next role", "next role", "what do you want in your next role", "role expectations", "ideal role", "what kind of role are you seeking"], "a": "I’m looking for a role where I can own a product end-to-end and work on initiatives that directly improve customer problems. I thrive in collaborative environments where product, design, and engineering work together, and where decisions are guided by both data and customer feedback. I’m also looking for strong leadership that encourages ownership and continuous learning so I can grow as a PM and help products succeed. This role appears to offer that mix of impactful work, cross‑functional collaboration, and speaking the language of product."}, {"q": ["where did varun graduate", "where did he graduate", "where did you graduate", "which university did you graduate from", "graduate from", "graduated from", "alma mater", "which college", "which school", "your university", "mba school", "mba university", "where did varun do mba", "masters school", "graduate school", "pace university", "mba college", "where study masters"], "a": "Pace University, New York City — MBA in Business Analytics (January 2022 – December 2023)."}, {"q": ["mba graduation year", "when did varun graduate mba", "which year did he graduate mba", "masters graduation date", "when did you graduate mba", "graduated when mba", "which year did he graduate", "when did he graduate", "graduation month mba"], "a": "MBA graduation: December 2023."}, {"q": ["bachelors", "bachelor's", "undergrad", "undergraduate", "ug", "under graduation", "bba", "where did he do his bachelor's", "where did varun do his bachelor's", "undergrad college", "undergrad university", "surana university", "bba college", "bba school"], "a": "Surana University — Bachelor of Business Administration (BBA), 2016–2019 (graduated August 2019)."}, {"q": ["bachelor graduation year", "when did varun graduate bachelors", "which year did he graduate his bachelors", "undergrad graduation date", "bba graduation year", "when did you graduate bachelors", "bachelor graduation month"], "a": "Bachelor’s graduation: August 2019."}, {"q": ["education", "where did varun study", "where did varun graduate from", "college and university", "schools", "degrees", "academic background", "academics"], "a": "Education: MBA in Business Analytics from Pace University (NYC), January 2022 – December 2023; BBA from Surana University, 2016–2019 (graduated August 2019)."}, {"q": ["current title", "job title", "role title", "what is varun's title", "what do you do", "availability", "available to start", "start date", "notice period", "when can you start", "join immediately", "start immediately"], "a": "Title: Product Manager. Availability: I can start immediately."}, {"q": ["compensation", "salary expectations", "expected salary", "pay range", "comp range", "ctc", "what salary are you looking for"], "a": "Compensation: open to negotiation."}, {"q": ["work arrangement", "remote", "hybrid", "in person", "onsite", "work location", "time zone", "timezone", "working hours", "office policy"], "a": "I’m comfortable with remote, hybrid, or in‑person setups, and I can work across any U.S. time zone."}, {"q": ["industry preference", "preferred industry", "industry focus", "domain preference", "what industries", "any industry", "preference anything is okay"], "a": "Industry‑agnostic and customer‑first: if the product truly solves user problems, the industry comes second."}, {"q": ["company stage", "stage preference", "startup vs enterprise", "early stage vs growth", "series a", "seed", "mature company", "any company stage"], "a": "I’m comfortable at any company stage—from 0→1 to growth and mature."}, {"q": ["team size", "team preference", "small team or big team", "what team size", "org size", "any team size"], "a": "Any team size works—I adapt to small, fast squads and larger cross‑functional groups."}, {"q": ["elevance", "elevance health", "sydney health", "healthcare app", "telehealth", "elevance highlights", "sydney"], "a": "At Elevance Health I managed parts of the Sydney Health app (16M+ members): billing‑related experiences such as claims, prescriptions, and insurance. I owned the roadmap, used SQL/Tableau to analyze member journeys, and shipped improvements in two‑week sprints with engineering, design, UX, and operations."}, {"q": ["mta", "transit", "bus operations", "wait time", "gps", "cameras", "payment machines", "transit analytics"], "a": "At MTA I worked on reducing passenger wait times during peak hours. I used SQL/Tableau to flag not‑service‑ready buses (payment, GPS, camera issues) and coordinated with engineering/ops/planners to fix and re‑route. This cut peak wait times by about 15 minutes."}, {"q": ["infosys", "capital one", "credit cards", "disputes", "chargebacks", "refunds", "fraud", "backlog"], "a": "At Infosys (supporting Capital One) I analyzed dispute workflows in SQL/Tableau, identified bottlenecks, and partnered with ops/fraud/engineering/PMs to redesign flows and prioritize fixes—reducing backlog and improving customer NPS."}, {"q": ["muddie trails", "0-1", "booking platform", "payments platform", "travel startup", "referrals", "personas"], "a": "At Muddie Trails (first PM) I built a 0→1 booking and payments platform: defined personas, onboarded vendors, designed booking flows, launched referrals, and set up dashboards. I onboarded the first ~200 customers, helping scale from dozens to tens of thousands of users."}, {"q": ["work with engineers", "experience working closely with engineers", "engineer collaboration", "engineering partnership", "technical collaboration"], "a": "Background in analytics (started as a data analyst) helped me partner deeply with engineers. I bring eng into discovery early, ask technical questions, and communicate clearly with PRDs/user stories and trade‑offs. I keep things lean with JIRA and protect focus time."}, {"q": ["stakeholder management", "stakeholder communication", "cross functional", "xfn alignment", "managing stakeholders"], "a": "Clarity, context, cadence: with engineering I use stories, edge cases, and trade‑offs; with data, success metrics and dashboards; with non‑technical partners, plain language, visuals, impact, and timelines. I share proactive updates (boards, sprint reviews, one‑pagers) tied to the roadmap."}, {"q": ["product strengths", "strengths", "superpowers", "what are your strengths", "pm strengths"], "a": "Strengths: customer discovery (JTBD), problem framing, crisp PRDs/user stories, prioritization (RICE & impact‑effort), SQL‑driven insights, experiment design (A/B tests), journey simplification, stakeholder alignment, and outcome‑focused roadmaps."}, {"q": ["favorite part of pm", "what do you enjoy about pm", "what do you like about product management", "best part of being a pm"], "a": "Solving real‑world customer problems and making experiences easier; turning ambiguity into testable bets; collaborating with design/engineering/data; shipping value iteratively."}, {"q": ["measure success", "how do you measure success", "success metrics", "kpis", "north star"], "a": "Clear north‑star and guardrail metrics; experiment quickly; ship measurable impact. I track adoption, activation, task success, retention, and support deflection depending on the problem."}, {"q": ["tools you use most", "tools", "stack", "favorite tools", "product tools"], "a": "JIRA, Figma, SQL, Python, Tableau/Looker, Amplitude/GA, and Confluence."}, {"q": ["free time", "hobbies", "outside work", "what do you do for fun", "what does varun do in free time", "what varun likes to do other than work", "what do you like to do other than work"], "a": "Varun likes long runs, workouts, photography, hiking, and baking. Weekends are for coffee hunts, exploring different cuisines, cooking simple recipes, and catching up with friends."}, {"q": ["where is varun based", "location", "city", "based in", "current location", "where are you located"], "a": "Varun is based in New York and open to relocating anywhere in the USA."}, {"q": ["relocation", "willing to relocate", "can you relocate", "relocate anywhere"], "a": "Yes—open to relocating anywhere in the USA."}, {"q": ["work authorization", "work auth", "visa", "sponsorship", "authorized to work", "work permit"], "a": "Authorized to work in the USA for any employer."}, {"q": ["favorite project", "best project", "project you are most proud of", "0-1 project", "project you’re most proud of"], "a": "My favorite project was at Muddie Trails (first PM). It was a true 0→1 build—personas, vendor onboarding, booking flow, referrals, metrics, and cross‑functional execution. I personally onboarded the first ~200 customers, which helped the company scale to 70k+ users."}, {"q": ["greatest accomplishment", "biggest impact", "proudest achievement", "impact you made", "largest impact"], "a": "Personal: first in my generation to study abroad and earn a master’s. Professional: as first PM at Muddie Trails, built a scalable booking/payments platform and growth programs, scaling from ~50 to tens of thousands of users."}, {"q": ["not on your resume", "fun fact", "something unique", "tell me something personal"], "a": "I’m a full‑time PM and a part‑time chef and biker. Hiking since I was 10 is my reset. Cooking became a passion in the U.S.—I treat recipes like product experiments and iterate."}, {"q": ["5 year plan", "where do you see yourself", "career goals", "long term goals"], "a": "Grow into a trusted product leader who teams turn to for tough challenges—earning that trust by consistently delivering outcomes and building strong, motivated teams."}, {"q": ["why product", "why pm", "why do you want to be a product manager", "motivation for pm"], "a": "I love turning real user problems into products that help. The role blends user empathy, systems thinking, and execution—aligning stakeholders and shipping meaningful outcomes."}, {"q": ["hardest thing about pm", "what do you hate about pm", "biggest challenge as pm", "one thing you dislike about pm"], "a": "Influence without direct authority—balancing customer needs with feasibility. It’s the core of PM: make tough trade‑offs, align to strategy, and earn trust by delivering outcomes."}, {"q": ["good pm", "successful pm", "what makes a great pm", "pm qualities"], "a": "Deep context (market, user, company), empathy for users and teammates, high EQ, and crisp communication. Connect needs with feasibility, make trade‑offs, align the roadmap to strategy, and set the team up to win."}, {"q": ["portfolio link", "website", "portfolio url", "portfolio"], "a": "Portfolio: https://varunthinksproduct.framer.website/"}, {"q": ["email", "contact varun", "how to contact varun", "reach out"], "a": "Email: varunsrikanth23@gmail.com"}, {"q": ["resume", "cv", "download resume"], "a": "Use the Resume button at the top to open the PDF."}];
+
+const chat = document.getElementById("chat");
+const chatwrap = document.getElementById("chatwrap");
+const q = document.getElementById("q");
+const sendBtn = document.getElementById("send");
+const chips = document.getElementById("chips");
+
+const SUGGESTIONS = [
+  "Summarize Varun's intro",
+  "What are Varun's top projects?",
+  "What roles is Varun targeting now?",
+  "What skills does Varun use most?"
+];
+
+function ensureChatVisible(){ 
+  if(chatwrap.style.display !== "block"){
+    chatwrap.style.display = "block"; 
+    document.body.classList.add("chat-on");
+  }
+}
+function row(role, nodeOrText){
+  ensureChatVisible();
+  const r=document.createElement("div"); r.className="row "+role;
+  const b=document.createElement("div"); b.className="bubble";
+  if(nodeOrText instanceof Node) b.appendChild(nodeOrText); else b.textContent = nodeOrText;
+  r.appendChild(b); chat.appendChild(r); chat.scrollTop=chat.scrollHeight;
+}
+function typingNode(){
+  const c=document.createElement("div"); c.className="typing";
+  c.innerHTML='<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+  return c;
+}
+function typeText(el, text, speed=12){
+  return new Promise(res=>{
+    let i=0;
+    const tick=()=>{ 
+      el.textContent += text[i++]; 
+      chat.scrollTop = chat.scrollHeight;
+      if(i<text.length) setTimeout(tick, speed); else res();
+    };
+    tick();
+  });
+}
+function norm(s){ return String(s||"").toLowerCase(); }
+function score(query, keys){
+  const nq=norm(query);
+  return (keys||[]).reduce((s,k)=> nq.includes(norm(k)) ? s+1 : s, 0);
+}
+
+// Intent router inserted here
+
+function intentRoute(query){
+  const q = norm(query);
+  const hasBachelor = q.includes("bachelor") || q.includes("bachelors") || q.includes("undergrad") || q.includes("ug") || q.includes("bba");
+  const hasMBA = q.includes("mba") || q.includes("master");
+  const asksWhereGraduate = (
+    (q.includes("where") && q.includes("graduate")) ||
+    q.includes("graduated from") || q.includes("graduate from") ||
+    q.includes("alma mater") || (q.includes("where") && (q.includes("college") || q.includes("university") || q.includes("school")))
+  );
+  const asksYear = (q.includes("which year") || q.includes("what year") || q.includes("when did") || q.includes("graduation year") || q.includes("graduation month"));
+  if (asksWhereGraduate){
+    if (hasBachelor) return "bachelors";
+    return "mba_school";
+  }
+  if (asksYear){
+    if (hasBachelor) return "bachelors_year";
+    if (hasMBA) return "mba_year";
+    return "mba_year";
+  }
+  return null;
+}
+
+
+function pickAnswer(query){
+  const route = intentRoute(query);
+  if(route==="mba_school"){ return KB.find(i => (i.q||[]).includes("where did varun graduate")).a; }
+  if(route==="mba_year"){ return KB.find(i => (i.q||[]).includes("mba graduation year")).a; }
+  if(route==="bachelors"){ return KB.find(i => (i.q||[]).includes("bachelors")).a; }
+  if(route==="bachelors_year"){ return KB.find(i => (i.q||[]).includes("bachelor graduation year")).a; }
+
+  // Fuzzy score across KB
+  let best={a:KB[0].a,s:0};
+  for(const item of KB){
+    const s = score(query, item.q);
+    if(s>best.s) best={a:item.a,s};
+  }
+  // Extra heuristic: if user asks 'where ... graduate' or mentions college/university, avoid vague intro
+  if(best.s===0){
+    const qn=norm(query);
+    if(qn.includes("where") && (qn.includes("graduate") || qn.includes("university") || qn.includes("college") || qn.includes("alma"))) {
+      return KB.find(i => (i.q||[]).includes("where did varun graduate")).a;
+    }
+  }
+  return best.a;
+}
+
+SUGGESTIONS.forEach(t=>{
+  const b=document.createElement("button"); 
+  b.className="chip"; b.textContent=t; 
+  b.onclick=()=>sendQuery(t);
+  chips.appendChild(b);
+});
+
+function sendQuery(text){
+  const t=(text||q.value||"").trim();
+  if(!t) return;
+  q.value="";
+  row("me", t);
+
+  const tn = typingNode();
+  row("bot", tn);
+
+  const reply = pickAnswer(t);
+  setTimeout(async()=>{
+    const lastRow = tn.parentElement.parentElement;
+    lastRow.remove();
+    const holder = document.createElement("span");
+    row("bot", holder);
+    await typeText(holder, reply, 11);
+  }, 350);
+}
+
+sendBtn.onclick=()=>sendQuery();
+q.addEventListener("keydown", e=>{ if(e.key==="Enter") sendQuery(); });
+</script>
+</body>
+</html>
