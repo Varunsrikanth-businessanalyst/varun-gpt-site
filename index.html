@@ -110,6 +110,15 @@ const KB = [
     q:["what is varun expecting in next roles?","what are you looking for in your next role","next role expectations","what do you want in your next role","role expectations"],
     a:"I’m looking for a role where I can own a product end-to-end and work on initiatives that directly improve customer problems. I thrive in collaborative environments where product, design, and engineers work together, and where decisions are guided by both data and customer feedback. I’m also looking for strong leadership that encourages ownership and continuous learning so I can grow as a PM and help products succeed."
   },
+{ key:"why_pm",
+  q:["why product","why product manager","why pm","motivation for pm"],
+  a:"I love turning real user problems into products that help. The role blends user empathy, systems thinking, and execution—aligning stakeholders and shipping meaningful outcomes."
+},
+
+{ key:"hobbies",
+  q:["hobby","hobbies","free time","outside work","what does varun like to do","other than work"],
+  a:"Varun likes long runs, workouts, photography, hiking, and baking. Weekends are for coffee hunts, exploring different cuisines, cooking simple recipes, and catching up with friends."
+},
 
   { key:"pm_def",
     q:[
@@ -226,7 +235,18 @@ One area I’ve been working on is balancing my attention to detail. I naturally
 /* ================== Router (priority first) ================== */
 const norm = s => String(s||"").toLowerCase();
 
-function includesAny(s, arr){ s = norm(s); return arr.some(k => s.includes(norm(k))); }
+function includesAny(s, arr){
+  s = norm(s);
+  return arr.some(k => {
+    k = norm(k);
+    // For short keywords (<=4 chars like "age"), match whole words to avoid accidental hits
+    if (k.length <= 4) {
+      const regex = new RegExp("\\b" + k + "\\b", "i");
+      return regex.test(s);
+    }
+    return s.includes(k);
+  });
+}
 
 // Return the first KB entry whose key matches
 const get = key => (KB.find(i => i.key === key) || {}).a || "";
@@ -237,6 +257,13 @@ function route(raw){
 
   // 1) PM definition
   if (includesAny(q, ["product management","pm definition","what is pm","define pm"])) return get("pm_def");
+// Why Product Manager
+if (includesAny(q, ["why product","why product manager","why pm","motivation for pm"])) 
+  return get("why_pm");
+
+// Hobbies / Free time
+if (includesAny(q, ["hobby","hobbies","free time","outside work","like to do"])) 
+  return get("hobbies");
 
     // Chips / quick questions
   if (includesAny(q, ["varun's introduction","introduction","intro overview"])) return get("intro");
