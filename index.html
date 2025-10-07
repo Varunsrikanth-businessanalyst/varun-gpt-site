@@ -384,7 +384,7 @@ async function askLLM(prompt){
   return data.answer || data.output || 'No answer';
 }
 
-function sendQuery(text){
+async function sendQuery(text){
   const t=(text||qEl.value||"").trim();
   if(!t) return;
   qEl.value="";
