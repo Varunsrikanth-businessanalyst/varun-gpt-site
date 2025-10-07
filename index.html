@@ -373,6 +373,16 @@ function typeText(el, text, speed=12){
     tick();
   });
 }
+async function askLLM(prompt){
+  const res = await fetch('/.netlify/functions/ask', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ prompt })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'LLM call failed');
+  return data.answer || data.output || 'No answer';
+}
 
 function sendQuery(text){
   const t=(text||qEl.value||"").trim();
@@ -380,17 +390,31 @@ function sendQuery(text){
   qEl.value="";
   row("me", t);
 
-  const tn=typingNode();
-  row("bot", tn);
+ const tn = typingNode();
+row("bot", tn);
 
-  const reply = route(t);
-  setTimeout(async()=>{
-    const lastRow = tn.parentElement.parentElement;
-    lastRow.remove();
-    const holder = document.createElement("span");
-    row("bot", holder);
-    await typeText(holder, reply, 11);
-  }, 300);
+try {
+  // Try KB first
+  const kbReply = route(t);
+
+  // Decide if we should call the LLM
+  const needsLLM =
+    !kbReply ||
+    kbReply.startsWith("I didn’t find") ||
+    kbReply.startsWith("I didn't find");
+
+  const finalAnswer = needsLLM ? await askLLM(t) : kbReply;
+
+  // Render answer
+  const lastRow = tn.parentElement.parentElement;
+  lastRow.remove();
+  const holder = document.createElement("span");
+  row("bot", holder);
+  await typeText(holder, finalAnswer, 11);
+} catch (err) {
+  const lastRow = tn.parentElement.parentElement;
+  lastRow.remove();
+  row("bot", "Hmm, something went wrong contacting the AI. Please try again.");
 }
 
 sendBtn.onclick = ()=>sendQuery();
